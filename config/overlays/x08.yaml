@@ -1,0 +1,41 @@
+name: X08.BIN
+sha1: dece9a61218eb0704f2d1cf5fe427cd4b4bbb8a7
+options:
+  basename: x08
+  target_path: disc/SYSTEM/X08.BIN
+  base_path: ../..
+  platform: psx
+  compiler: PSYQ
+  asm_path: asm/x08
+  src_path: src/x08
+  asset_path: assets/x08
+  build_path: build
+  ld_script_path: build/x08.ld
+  find_file_boundaries: False
+  gp_value: 0x80097FA8
+  o_as_suffix: True
+  use_legacy_include_asm: False
+  section_order: [".rodata", ".text", ".data", ".bss"]
+  symbol_addrs_path:
+    - config/symbols/scus_942.36.txt
+    - config/symbols/x_shared.txt
+    - config/symbols/x08.txt
+  undefined_funcs_auto_path: build/x08.undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/x08.undefined_syms_auto.txt
+  subalign: 2
+  string_encoding: ASCII
+  data_string_encoding: ASCII
+  rodata_string_guesser_level: 2
+  data_string_guesser_level: 2
+segments:
+  - name: x08
+    type: code
+    start: 0x0
+    vram: 0x800E7388
+    subsegments:
+      - [0x0, data]
+      - [0x1E60, asm]
+      - [0x2CA10, data]
+      - [0x2DE8C, asm]
+      - [0x2DF54, data]
+  - [0x305E0]

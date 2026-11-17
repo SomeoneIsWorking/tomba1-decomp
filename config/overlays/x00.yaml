@@ -1,0 +1,41 @@
+name: X00.BIN
+sha1: 2ba0d06824c940ab40c4c4031f3e3b8e9ead1b89
+options:
+  basename: x00
+  target_path: disc/SYSTEM/X00.BIN
+  base_path: ../..
+  platform: psx
+  compiler: PSYQ
+  asm_path: asm/x00
+  src_path: src/x00
+  asset_path: assets/x00
+  build_path: build
+  ld_script_path: build/x00.ld
+  find_file_boundaries: False
+  gp_value: 0x80097FA8
+  o_as_suffix: True
+  use_legacy_include_asm: False
+  section_order: [".rodata", ".text", ".data", ".bss"]
+  symbol_addrs_path:
+    - config/symbols/scus_942.36.txt
+    - config/symbols/x_shared.txt
+    - config/symbols/x00.txt
+  undefined_funcs_auto_path: build/x00.undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/x00.undefined_syms_auto.txt
+  subalign: 2
+  string_encoding: ASCII
+  data_string_encoding: ASCII
+  rodata_string_guesser_level: 2
+  data_string_guesser_level: 2
+segments:
+  - name: x00
+    type: code
+    start: 0x0
+    vram: 0x800E7388
+    subsegments:
+      - [0x0, data]
+      - [0x1E60, asm]
+      - [0x2CA10, data]
+      - [0x2DE8C, asm]
+      - [0x503D8, data]
+  - [0x53F38]

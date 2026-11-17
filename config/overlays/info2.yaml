@@ -1,0 +1,38 @@
+name: INFO2.BIN
+sha1: 9e19f8b912ab0fd1ea4050e8a2c51e6b8e533c5b
+options:
+  basename: info2
+  target_path: disc/SYSTEM/INFO2.BIN
+  base_path: ../..
+  platform: psx
+  compiler: PSYQ
+  asm_path: asm/info2
+  src_path: src/info2
+  asset_path: assets/info2
+  build_path: build
+  ld_script_path: build/info2.ld
+  find_file_boundaries: False
+  gp_value: 0x80097FA8
+  o_as_suffix: True
+  use_legacy_include_asm: False
+  section_order: [".rodata", ".text", ".data", ".bss"]
+  symbol_addrs_path:
+    - config/symbols/scus_942.36.txt
+    - config/symbols/info2.txt
+  undefined_funcs_auto_path: build/info2.undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/info2.undefined_syms_auto.txt
+  subalign: 2
+  string_encoding: ASCII
+  data_string_encoding: ASCII
+  rodata_string_guesser_level: 2
+  data_string_guesser_level: 2
+segments:
+  - name: info2
+    type: code
+    start: 0x0
+    vram: 0x800E7388
+    subsegments:
+      - [0x0, data]
+      - [0xC08, asm]
+      - [0x16848, data]
+  - [0x215E0]

@@ -1,0 +1,38 @@
+name: INFO.BIN
+sha1: e51dd1e335c95a7dc4cf1632ec0e9f647d3c8610
+options:
+  basename: info
+  target_path: disc/SYSTEM/INFO.BIN
+  base_path: ../..
+  platform: psx
+  compiler: PSYQ
+  asm_path: asm/info
+  src_path: src/info
+  asset_path: assets/info
+  build_path: build
+  ld_script_path: build/info.ld
+  find_file_boundaries: False
+  gp_value: 0x80097FA8
+  o_as_suffix: True
+  use_legacy_include_asm: False
+  section_order: [".rodata", ".text", ".data", ".bss"]
+  symbol_addrs_path:
+    - config/symbols/scus_942.36.txt
+    - config/symbols/info.txt
+  undefined_funcs_auto_path: build/info.undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/info.undefined_syms_auto.txt
+  subalign: 2
+  string_encoding: ASCII
+  data_string_encoding: ASCII
+  rodata_string_guesser_level: 2
+  data_string_guesser_level: 2
+segments:
+  - name: info
+    type: code
+    start: 0x0
+    vram: 0x800E7388
+    subsegments:
+      - [0x0, data]
+      - [0x2D0, asm]
+      - [0x6730, data]
+  - [0xD3D4]

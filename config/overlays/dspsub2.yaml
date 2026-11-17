@@ -1,0 +1,38 @@
+name: DSPSUB2.BIN
+sha1: 631440078f95b983bcff158554b2e072df41a7e9
+options:
+  basename: dspsub2
+  target_path: disc/SYSTEM/DSPSUB2.BIN
+  base_path: ../..
+  platform: psx
+  compiler: PSYQ
+  asm_path: asm/dspsub2
+  src_path: src/dspsub2
+  asset_path: assets/dspsub2
+  build_path: build
+  ld_script_path: build/dspsub2.ld
+  find_file_boundaries: False
+  gp_value: 0x80097FA8
+  o_as_suffix: True
+  use_legacy_include_asm: False
+  section_order: [".rodata", ".text", ".data", ".bss"]
+  symbol_addrs_path:
+    - config/symbols/scus_942.36.txt
+    - config/symbols/dspsub2.txt
+  undefined_funcs_auto_path: build/dspsub2.undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/dspsub2.undefined_syms_auto.txt
+  subalign: 2
+  string_encoding: ASCII
+  data_string_encoding: ASCII
+  rodata_string_guesser_level: 2
+  data_string_guesser_level: 2
+segments:
+  - name: dspsub2
+    type: code
+    start: 0x0
+    vram: 0x800E7388
+    subsegments:
+      - [0x0, data]
+      - [0x20C, asm]
+      - [0x4E0C, data]
+  - [0xEF58]

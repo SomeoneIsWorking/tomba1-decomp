@@ -1,0 +1,38 @@
+name: GOVER.BIN
+sha1: 0dc13a1ef2dfca024f623b7ff3fc33a2d60912b9
+options:
+  basename: gover
+  target_path: disc/SYSTEM/GOVER.BIN
+  base_path: ../..
+  platform: psx
+  compiler: PSYQ
+  asm_path: asm/gover
+  src_path: src/gover
+  asset_path: assets/gover
+  build_path: build
+  ld_script_path: build/gover.ld
+  find_file_boundaries: False
+  gp_value: 0x80097FA8
+  o_as_suffix: True
+  use_legacy_include_asm: False
+  section_order: [".rodata", ".text", ".data", ".bss"]
+  symbol_addrs_path:
+    - config/symbols/scus_942.36.txt
+    - config/symbols/gover.txt
+  undefined_funcs_auto_path: build/gover.undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/gover.undefined_syms_auto.txt
+  subalign: 2
+  string_encoding: ASCII
+  data_string_encoding: ASCII
+  rodata_string_guesser_level: 2
+  data_string_guesser_level: 2
+segments:
+  - name: gover
+    type: code
+    start: 0x0
+    vram: 0x800E7388
+    subsegments:
+      - [0x0, data]
+      - [0x1C, asm]
+      - [0xC6C, data]
+  - [0xCAC]

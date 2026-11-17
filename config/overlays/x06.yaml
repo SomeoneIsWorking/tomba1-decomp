@@ -1,0 +1,41 @@
+name: X06.BIN
+sha1: 869f84d42bd4af486ffac0f65a36e29260b66ac2
+options:
+  basename: x06
+  target_path: disc/SYSTEM/X06.BIN
+  base_path: ../..
+  platform: psx
+  compiler: PSYQ
+  asm_path: asm/x06
+  src_path: src/x06
+  asset_path: assets/x06
+  build_path: build
+  ld_script_path: build/x06.ld
+  find_file_boundaries: False
+  gp_value: 0x80097FA8
+  o_as_suffix: True
+  use_legacy_include_asm: False
+  section_order: [".rodata", ".text", ".data", ".bss"]
+  symbol_addrs_path:
+    - config/symbols/scus_942.36.txt
+    - config/symbols/x_shared.txt
+    - config/symbols/x06.txt
+  undefined_funcs_auto_path: build/x06.undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/x06.undefined_syms_auto.txt
+  subalign: 2
+  string_encoding: ASCII
+  data_string_encoding: ASCII
+  rodata_string_guesser_level: 2
+  data_string_guesser_level: 2
+segments:
+  - name: x06
+    type: code
+    start: 0x0
+    vram: 0x800E7388
+    subsegments:
+      - [0x0, data]
+      - [0x1E60, asm]
+      - [0x2CA10, data]
+      - [0x2DE8C, asm]
+      - [0x36F60, data]
+  - [0x3B15C]

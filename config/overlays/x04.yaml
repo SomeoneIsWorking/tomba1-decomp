@@ -1,0 +1,41 @@
+name: X04.BIN
+sha1: 84cf422f1e5b1fae0d4e2696547eb7fd2eb0633a
+options:
+  basename: x04
+  target_path: disc/SYSTEM/X04.BIN
+  base_path: ../..
+  platform: psx
+  compiler: PSYQ
+  asm_path: asm/x04
+  src_path: src/x04
+  asset_path: assets/x04
+  build_path: build
+  ld_script_path: build/x04.ld
+  find_file_boundaries: False
+  gp_value: 0x80097FA8
+  o_as_suffix: True
+  use_legacy_include_asm: False
+  section_order: [".rodata", ".text", ".data", ".bss"]
+  symbol_addrs_path:
+    - config/symbols/scus_942.36.txt
+    - config/symbols/x_shared.txt
+    - config/symbols/x04.txt
+  undefined_funcs_auto_path: build/x04.undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/x04.undefined_syms_auto.txt
+  subalign: 2
+  string_encoding: ASCII
+  data_string_encoding: ASCII
+  rodata_string_guesser_level: 2
+  data_string_guesser_level: 2
+segments:
+  - name: x04
+    type: code
+    start: 0x0
+    vram: 0x800E7388
+    subsegments:
+      - [0x0, data]
+      - [0x1E60, asm]
+      - [0x2CA10, data]
+      - [0x2DE8C, asm]
+      - [0x4834C, data]
+  - [0x4DA90]

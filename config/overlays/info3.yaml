@@ -1,0 +1,38 @@
+name: INFO3.BIN
+sha1: c0073331fc635e077734b19cfc78b99d4e330e3b
+options:
+  basename: info3
+  target_path: disc/SYSTEM/INFO3.BIN
+  base_path: ../..
+  platform: psx
+  compiler: PSYQ
+  asm_path: asm/info3
+  src_path: src/info3
+  asset_path: assets/info3
+  build_path: build
+  ld_script_path: build/info3.ld
+  find_file_boundaries: False
+  gp_value: 0x80097FA8
+  o_as_suffix: True
+  use_legacy_include_asm: False
+  section_order: [".rodata", ".text", ".data", ".bss"]
+  symbol_addrs_path:
+    - config/symbols/scus_942.36.txt
+    - config/symbols/info3.txt
+  undefined_funcs_auto_path: build/info3.undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/info3.undefined_syms_auto.txt
+  subalign: 2
+  string_encoding: ASCII
+  data_string_encoding: ASCII
+  rodata_string_guesser_level: 2
+  data_string_guesser_level: 2
+segments:
+  - name: info3
+    type: code
+    start: 0x0
+    vram: 0x800E7388
+    subsegments:
+      - [0x0, data]
+      - [0x454, asm]
+      - [0x6C84, data]
+  - [0x9898]
