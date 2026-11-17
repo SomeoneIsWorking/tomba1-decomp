@@ -1,0 +1,5 @@
+// x04: area 4 (area 12 runs it as variant 8).
+backdropColumnUpdate = 0x8011C894; // type:func 2D type 9 - state 0 records home and frames, 1 places the column, 2 and 3 release
+animateBackdropLeader = 0x8011CB48; // type:func
+drawTwoFrameGroup = 0x8011DA28; // type:func 2D kind 4 - two frames, the second raised by e+0x20, culled at 0x141/0xF1
+backdropFrameAnims = 0x8013405C;

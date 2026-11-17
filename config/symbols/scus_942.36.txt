@@ -1,0 +1,259 @@
+// scus_942.36: names from our own RE (psx-tomba titles/tomba1 owners and docs); docs/names.md lists where each came from.
+
+// Startup and frame
+__start = 0x8006B58C; // type:func crt0 entry - clears bss, sets gp/sp, InitHeap, calls main
+InitHeap = 0x8006B70C; // type:func BIOS A(39h) wrapper
+initCxxGuard = 0x8006B634; // type:func first call of main, before SetDispMask
+main = 0x800163B0; // type:func boot initialization, then the task scheduler, never returns
+displayFlip = 0x80016940; // type:func ClearOTagR the 0x328-entry table, swap buffers, DrawOTag from its last entry
+setFrameCadence = 0x80016A00; // type:func main calls it (1, 1) - fields per logic frame
+initGameState = 0x80016A18; // type:func
+initDisplay = 0x80016AF4; // type:func SetGeomOffset(160, 112), SetGeomScreen(0x220)
+buildDisplayEnvs = 0x80016C4C; // type:func 320x224 display and draw rectangles for both buffers
+initTasks = 0x80016FD8; // type:func
+dispatchTasks = 0x80017024; // type:func walks taskTable with currentTask, runs state 2 records, restarts state 3 ones
+createTask = 0x800170F8; // type:func
+startTask = 0x80017154; // type:func (slot, entry)
+taskSleep = 0x800171D4; // type:func (fields) the running task yields for that many fields
+taskExit = 0x80017208; // type:func record state 0, CloseTh, ChangeTh(0xFF000000)
+taskRestart = 0x800172C4; // type:func
+vblankCallback = 0x80017374; // type:func
+tickTaskSleeps = 0x800173B0; // type:func wakes a sleeping task - record +2 from 1 to 0, state 1 to 2
+releaseEntity = 0x800188D0; // type:func
+pushCategory1 = 0x80018BC8; // type:func the object-cull pushers, by +0x1C & 0x7F
+pushCategory2 = 0x80018C04; // type:func
+pushCategory3 = 0x80018C40; // type:func
+pushCategory4 = 0x80018C8C; // type:func
+pushCategory8 = 0x80018CC8; // type:func
+pushCategory5 = 0x80018D04; // type:func
+pushCategory7 = 0x80018D40; // type:func
+initMenu = 0x80019020; // type:func
+resetPacketCursor = 0x8001936C; // type:func cursor = (0x800B3188 + buffer * 0xC000) & 0xFFFFFF, buffer = *0x1F8001F4
+initInput = 0x80028728; // type:func
+
+// Front end
+bootTask = 0x800191E0; // type:func task 0 at boot, state 0xB is the SCEA card
+titleTask = 0x80019844; // type:func logo movie (stream 0x15) and hold, intro movie (stream 0), title, state > 2 skips on Start
+titleScreen = 0x80019E68; // type:func the TOMBA! PRESS START hold, its 972-pass timeout returns to the intro movie
+newGameMachine = 0x8001A9F0; // type:func +0x4C - list 9, wait, area load, loading card, BOY.STR, field
+streamTask = 0x8001F1C0; // type:func movie task, state 3 tears the stream down and exits
+
+// Area machine
+gameplayStateDispatcher = 0x8001AC00; // type:func switches on the gameplay record (*0x1F8001D4) +0x4C, applies the pending pair once 0x1F8001CE is set
+debugAreaSelect = 0x8001AD58; // type:func bounds the area by lastArea and the section by sectionCounts
+areaSelectMachine = 0x8001B0A4; // type:func machine 0 - area select/load, state 5 life-lost respawn, 6 the TRY AGAIN countdown
+fieldMachine = 0x8001B2B4; // type:func machine 1 - state 1 ticks the field, reads the hurt state, stops music, takes a life
+inventoryMachine = 0x8001BB1C; // type:func clears respawnInPlace
+loadingCardStep = 0x8001CA84; // type:func draws the loading card, blinking every 15 frames
+resolveAreaVariant = 0x8001CB54; // type:func rewrites area 12 to 4 (variant 8), 7 to 1 (6), 19 to 2 (0x11)
+loadArea = 0x8001CE80; // type:func
+enterSectionMachine = 0x8001CF7C; // type:func the section's machine from sectionMachines, no load
+areaTransitionHandler = 0x8001CFCC; // type:func machine 7 - state 3 copies the destination to the current area and loads it
+doorTransition = 0x8002CFFC; // type:func writes the destination, stopBgm(1) on an area change, machine 7 state 0
+areaProjectionSetup = 0x8002D784; // type:func reasserts H = 0x220 per area
+
+// Disc loader
+stopBgm = 0x80020C00; // type:func
+playSound = 0x8001FFE8; // type:func
+initSound = 0x800211A4; // type:func
+discLoaderTask = 0x80021340; // type:func task slot 2, one step per field (+0x48) - queue, Setloc, CdSync, CdRead, CdReadSync, unpack, advance
+loadBaseList = 0x80021C24; // type:func queues baseLoadLists[n], then yields until 0x1F8001CE
+appendLoadList = 0x80021D70; // type:func type 0xF0 code to 0x800E7388, type 0xF8 data to 0x80097FA8
+queueLoadList = 0x800222B8; // type:func starts the loader on loadLists[n]
+lzDecode = 0x8003EF50; // type:func the loader's LZ unpack
+
+// Object culls (gameplay state, issue 0012)
+cullObjectToDrawList = 0x80022C08; // type:func (object, margin) +1 and the category push when x and y are within margin of the 320x240 window
+cullObjectToDrawListMargin = 0x80022D3C; // type:func (object, margin) the same, x only
+ObjCullRegister = 0x80022E44; // type:func +1 and the category push when x and y are within 64 of the window
+isObjectInView = 0x80022F6C; // type:func (object) the 64 test without the push
+isOnScreen = 0x80022FD8; // type:func (x, y) the 64 test
+despawnObjectOffscreen = 0x80023020; // type:func 160 out of the window, or below the floor row 0x800A38EA + 0x98, sets +4 3, +0 2, +1 0
+despawnObjectOffscreenMargin = 0x800230BC; // type:func (object, margin) the same with that margin
+decreaseObjectTimer = 0x800505B0; // type:func (object, amount) takes amount from the s16 +0x98, floors at 0
+
+// Loading and TRY AGAIN cards
+drawLoadingCard = 0x80023CE0; // type:func 7x6 board of 48-pixel tiles under the logo, into its own buffer
+drawTryAgainCard = 0x80023E44; // type:func
+drawLoadingCardTiles = 0x80023ED0; // type:func
+drawLoadingCardLogo = 0x80024008; // type:func
+
+// Meshes: chunk submitters cull each corner at 320x224 and link GPU packets
+meshTexturedTriangle = 0x80024CFC; // type:func
+meshTexturedQuad = 0x80024EEC; // type:func
+meshGouraudTexTriangle = 0x800251C0; // type:func
+meshGouraudTexQuad = 0x800253C8; // type:func
+meshLitFlatTriangle = 0x8002564C; // type:func
+meshLitFlatQuad = 0x80025810; // type:func
+meshLitGouraudTriangle = 0x80025A38; // type:func
+meshLitGouraudQuad = 0x80025C14; // type:func
+meshFlatTriangle = 0x80025E74; // type:func
+meshFlatQuad = 0x8002601C; // type:func
+meshGouraudTriangle = 0x80026228; // type:func
+meshGouraudQuad = 0x800263F0; // type:func
+drawRigidMesh = 0x80026694; // type:func (list, ot, entity, lit)
+drawPosedMesh = 0x80026E48; // type:func (list, ot, entity, vertices, lit at 16(sp))
+drawPlainMesh = 0x80027600; // type:func (list, ot) - unlit, no entity
+drawFaceMesh = 0x800279E8; // type:func (list, ot, entity)
+
+// Sprites and the 2D pool
+update2dPool = 0x8003438C; // type:func runs each of the ten 2D pool slots through entity2dTypes
+quadOnScreen = 0x80045AF8; // type:func four-corner screen test the overlays' quad drawers call
+drawSpriteParts = 0x800487A4; // type:func (entity)
+drawScaledSpriteParts = 0x80048BF0; // type:func (entity) kind 1 scales with distance
+drawRotatedSpriteParts = 0x80049134; // type:func (entity)
+drawRotatedScaledSpriteParts = 0x80049994; // type:func (entity) odd kinds scale with distance
+drawProjectedFrame = 0x8004A300; // type:func the frame around the RTPS-projected position
+drawProjectedFrameShaded = 0x8004A6A0; // type:func the same, shaded by e+0x6B
+drawModelQuad = 0x8004AA70; // type:func four model corners at e+0xB4 through the scratch matrix
+drawScreenParts = 0x8004BAF0; // type:func plain parts around the entity's screen x/y, at its layer plus e+0x1A
+walk2dPool = 0x8004DD14; // type:func dispatches on e+0xA - 0 drawProjectedFrame, 1 drawScreenSprites, 2 drawPictureRows, 3 painted room, 4 overlay group
+drawScreenSprites = 0x8004DFA0; // type:func the entity's frame as raw sprites at (e+0x12, e+0x16)
+drawPictureRows = 0x8004E244; // type:func 0x12-byte rows from pictureLists[e+3] up to a 0x7FFF tpage
+fadeStep = 0x8004FB54; // type:func
+
+// HUD
+drawHud = 0x8004E468; // type:func
+drawHudLives = 0x8004E590; // type:func anchor (0x18, 0xD0)
+drawHudPoints = 0x8004E714; // type:func anchor (300, 0x10)
+drawHudVitality = 0x8004E900; // type:func anchor (0x24, 0x1C)
+drawHudItemGauge = 0x8004EB10; // type:func three slots from itemGauges
+drawHudWeapon = 0x8004ED80; // type:func anchor (0x48, 0x10)
+
+// Psy-Q libraries
+OpenEvent = 0x8005B3AC; // type:func
+EnableEvent = 0x8005B3DC; // type:func
+EnterCriticalSection = 0x8005B41C; // type:func
+ExitCriticalSection = 0x8005B42C; // type:func
+initPad = 0x8005CFE8; // type:func
+initRect = 0x8005DD6C; // type:func main calls it (0x8009AFE8, 0, 0, 512, 240)
+ResetGraph = 0x8005E694; // type:func
+SetGraphDebug = 0x8005E92C; // type:func
+SetDispMask = 0x8005EAB8; // type:func
+DrawSync = 0x8005EB54; // type:func
+LoadImage = 0x8005EE18; // type:func
+SetDrawMode = 0x8005FA60; // type:func
+gpuTimeoutBegin = 0x80061480; // type:func libgpu's DrawSync timeout start
+gpuTimeoutExpired = 0x800614B4; // type:func libgpu's DrawSync timeout test
+InitGeom = 0x8006329C; // type:func
+SetGeomOffset = 0x80063A34; // type:func
+SetGeomScreen = 0x80063A54; // type:func
+cdSyncHandler = 0x800646F4; // type:func libcd's sync interrupt handler
+cdReadyHandler = 0x8006471C; // type:func libcd's ready interrupt handler
+cdCommandHandler = 0x80064744; // type:func libcd's command interrupt handler
+CdSync = 0x800648C8; // type:func forwards to cdSyncInternal unchanged
+CdReady = 0x800648E8; // type:func
+CdReadyCallback = 0x80064920; // type:func its one RAM write is cdReadyCallbackSlot
+CdControl = 0x80064938; // type:func
+CdControlF = 0x80064A70; // type:func
+CdControlB = 0x80064B9C; // type:func
+cdSyncInternal = 0x80065470; // type:func
+CdRead = 0x80066A50; // type:func
+CdReadSync = 0x80066B30; // type:func
+StSetStream = 0x80066C14; // type:func installs StCdInterrupt through CdReadyCallback
+StCdInterrupt = 0x80066CA8; // type:func
+StUnSetStream = 0x80066D28; // type:func CdReadyCallback(0)
+cdDmaCallback = 0x80066D80; // type:func the DMA callback DMACallback registers
+startCdDma = 0x80067A74; // type:func starts DMA3, spins on CD status 0x1F801800 bit 6
+VSync = 0x80067C30; // type:func VSync(-1) returns vsyncCount
+ResetCallback = 0x80067E24; // type:func
+DMACallback = 0x80067E84; // type:func
+gpuCriticalSection = 0x80067FA0; // type:func
+vblankHandler = 0x8006865C; // type:func advances vsyncCount
+StopCallback = 0x800689D4; // type:func
+
+// Tables
+drawKindTable = 0x80013E20;
+sectionMachines = 0x80077084;
+streamIndex = 0x8007775C;
+baseLoadLists = 0x800782F8;
+streamFiles = 0x800791A0; // CdlFILE per stream, 8 bytes each
+lastArea = 0x8007B290;
+sectionCounts = 0x8007B294; // u16 per area
+meshTintColours = 0x8007C160;
+entity2dTypes = 0x8007D57C;
+spriteAngleY = 0x8007D988;
+spriteAngleX = 0x8007DB88;
+pictureLists = 0x8007EBEC;
+itemGauges = 0x8007EC5C;
+
+// Library state
+gpuCommandPointer = 0x80090D70;
+gpuStatusPointer = 0x80090D7C;
+gpuControlPointer = 0x80090D8C;
+gpuQueueWriteIndex = 0x80090DA0;
+gpuQueueReadIndex = 0x80090DA4;
+gpuTimeoutCriticalState = 0x80090DB0;
+gpuTimeoutDeadline = 0x80090DB4;
+gpuTimeoutSpinCount = 0x80090DB8;
+cdSyncCallback = 0x80095FEC;
+cdReadyCallbackSlot = 0x80095FF0;
+cdFlags = 0x80095FFC;
+cdUnusedCallback = 0x80096000;
+cdLastMode = 0x8009600C;
+cdLastCommand = 0x8009600D;
+cdReadyStatus = 0x800962C8;
+cdSyncStatus = 0x800962C9;
+cdInterruptStatus = 0x800962CA;
+cdCommandCallback = 0x80096300;
+vsyncCount = 0x800974D4;
+
+// Game state
+loadLists = 0x80099C44;
+playerHurtState = 0x8009BCA0; // 1 on the knockback at vitality 0, 2 in the death pose
+stageEventArmed = 0x8009BCA4;
+currentArea = 0x8009BCC8; // u16
+currentSection = 0x8009BCCA; // u16
+respawnInPlace = 0x8009BCDC;
+stageEvent = 0x8009BCDD;
+lives = 0x8009BCE8;
+namedGauge = 0x8009BCF8;
+destinationArea = 0x8009C0FC; // u16
+destinationSection = 0x8009C0FE; // u16
+destinationEntry = 0x8009C108; // u16
+respawnArea = 0x8009C610; // u16
+respawnSection = 0x8009C612; // u16
+pauseFlags = 0x8009C62B;
+loadingCardCursor = 0x8009C8A8;
+loadQueue = 0x8009E748;
+padBuffer0 = 0x8009EB58;
+padBuffer1 = 0x8009EB7A;
+areaVariant = 0x8009EBA0;
+loadingCardBuffers = 0x800A1890; // 0x780 per buffer
+shakeY = 0x800A38D8;
+shakeX = 0x800A38DC;
+paintedMapWidth = 0x800A39DC; // in 32-column blocks
+entity2dPool = 0x800A3D08; // ten 0x6C-byte slots
+player = 0x800A5398;
+paintedMapBlocks = 0x800B0680;
+itemGaugeCounters = 0x800B07C8;
+packetPool = 0x800B3188; // two 0xC000 passes
+
+// Scratchpad
+scratchMatrix = 0x1F8000C0;
+depthColumn = 0x1F8000EE; // reference column of the depth-scaled sprite parts
+depthRow = 0x1F8000F6; // reference row
+cameraMatrix = 0x1F8000F8;
+packetCursor = 0x1F800164; // into packetPool
+cameraX = 0x1F800176;
+cameraY = 0x1F800186;
+depthPhase = 0x1F8001C8;
+streamState = 0x1F8001CC; // non-zero while streamTask plays, the frame end flips only at 0, 1 or 3 (3 becomes 2)
+loadDone = 0x1F8001CE;
+streamStop = 0x1F8001D3;
+currentTask = 0x1F8001D4; // the task record dispatchTasks is running
+vblankHandle = 0x1F8001D8; // OpenEvent result for vblankCallback
+pendingMachine = 0x1F8001DC;
+pendingState = 0x1F8001DE;
+orderingTable = 0x1F8001E0;
+fieldsPerFrame = 0x1F8001EA;
+drawSyncBeforeVblank = 0x1F8001EC;
+bufferIndex = 0x1F8001F4;
+categoryLists = 0x1F800218; // to 0x1F800230
+loadQueueTail = 0x1F80029C;
+loadQueueHead = 0x1F8002A0;
+partScale = 0x1F8002B4; // scale of sprite parts not scaled by distance
+backdropFrameTable = 0x1F8002D4;
+
+// Task records
+taskTable = 0x801FD800; // three 0x70-byte records - u16 state, u16 step, stack +8, entry +0xC

@@ -1,0 +1,4 @@
+// info: painted rooms of area 2.
+drawPaintedRoom = 0x800EA3A4; // type:func kind 3 while player +2 bit 1 is clear - two raw sprites from paintedRoomTable
+positionPaintedMap = 0x800EB328; // type:func x = 31 - ((cameraX + 0xA0) & 31), copies the map from paintedMapBlocks
+paintedRoomTable = 0x800EDAEC; // 12-byte rows - (0,0) 256x256 and (256,0) 128x256

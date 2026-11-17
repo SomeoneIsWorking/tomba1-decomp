@@ -1,0 +1,4 @@
+// info2: painted rooms of area 5.
+drawPaintedRoomSelected = 0x800EBA58; // type:func kind 3 while player +2 bit 1 is set
+positionPaintedMap = 0x800ECA4C; // type:func as info's
+paintedRoomTable = 0x800FDCB8;

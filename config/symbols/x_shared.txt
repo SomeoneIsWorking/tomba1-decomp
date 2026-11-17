@@ -1,0 +1,4 @@
+// x_shared: the code every X area overlay carries at 0x800E91E8..0x80113D98 (file 0x1E60..0x2CA10, identical in all).
+playerKnockback = 0x800FC6B8; // type:func mode 2 step 0, vitality 0 sets playerHurtState to 1
+playerDieStep = 0x800FDABC; // type:func raises playerHurtState to 2
+playerHandleHazardContact = 0x800FE970; // type:func a damage site - decreaseObjectTimer(player, amount), then the hurt mode
